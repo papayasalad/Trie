@@ -27,6 +27,8 @@ public class Trie {
             if (child == null) {
                 child = new EntryNode(character, i == word.length() - 1);
                 current.addChild(child);
+            } else if (i == word.length() - 1) {
+                child.setTerminal(true);
             }
 
             current = child;
@@ -46,6 +48,29 @@ public class Trie {
         }
 
         return current.isTerminal();
+    }
+
+    // remove word function:
+    // 1) unmark terminal to false for the last character;
+    // 2) remove the child from map of children if the EntryNode is not a termianl and has no children.
+    public void remove(String word) {
+        int wordLength = word.length();
+        for (int i = 0; i < wordLength; i++) {
+            EntryNode current = trie.getRoot();
+            for (int j = 0; j < word.length() - 1; j++) {
+                current = current.getChild(word.charAt(j));
+            }
+            EntryNode child = current.getChild(word.charAt(word.length() - 1));
+            if (i == 0) {
+                child.setTerminal(false);
+            }
+            if (!child.isTerminal() && child.getChildren().isEmpty()) {
+                current.removeChild(child);
+                word = word.substring(0, word.length() - 1);
+            } else {
+                return;
+            }
+        }
     }
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -76,5 +101,9 @@ public class Trie {
         System.out.println("Contains 'the': " + trie.contains("the"));
         System.out.println("Contains 'shore': " + trie.contains("shore"));
         System.out.println("Contains 'shorebird': " + trie.contains("shorebird"));
+
+        trie.remove("shorebird");
+        trie.remove("sea");
+        trie.printTrie();
     }
 }

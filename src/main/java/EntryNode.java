@@ -15,6 +15,7 @@ public class EntryNode {
         this.isTerminal = isTerminal;
     }
 
+    Map<Character, EntryNode> getChildren() { return children; }
 
     EntryNode getChild(Character data) {
         return children.get(data);
@@ -22,7 +23,9 @@ public class EntryNode {
 
     void addChild(EntryNode child) {
         this.children.put(child.letter, child);
-    }
+    } //child.letter can access private letter?
+
+    void removeChild(EntryNode child) { this.children.remove(child.letter); }
 
     boolean isTerminal() {
         return isTerminal;
@@ -38,7 +41,7 @@ public class EntryNode {
             return false;
         }
 
-        return ((EntryNode) obj).letter == this.letter;
+        return ((EntryNode) obj).letter == this.letter; //obj.letter can access private letter?
     }
 
     public String toString() {
