@@ -4,7 +4,7 @@ import java.util.*;
 public class EntryNode {
     private char letter;
     private boolean isTerminal;
-    private Map<Character, EntryNode> children = new HashMap<>();
+    private List<EntryNode> children = new ArrayList<>();
 
     EntryNode(char letter) {
         this(letter, false);
@@ -15,17 +15,43 @@ public class EntryNode {
         this.isTerminal = isTerminal;
     }
 
-    Map<Character, EntryNode> getChildren() { return children; }
+    List<EntryNode> getChildren() { return children; }
 
     EntryNode getChild(Character data) {
-        return children.get(data);
+        int min = 0;
+        int max = children.size() - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+            EntryNode child = children.get(mid);
+            if (child.letter == data) {
+                return child;
+            } else if (child.letter > data) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return null;
     }
 
     void addChild(EntryNode child) {
-        this.children.put(child.letter, child);
-    } //child.letter can access private letter?
+        int min = 0;
+        int max = children.size() - 1;
 
-    void removeChild(EntryNode child) { this.children.remove(child.letter); }
+        while (min <= max) {
+            int mid = (min + max) / 2;
+            char c = children.get(mid).letter;
+            if (child.letter > c) {
+                min = mid + 1;
+            } else if (child.letter < c) {
+                max = mid - 1;
+            }
+        }
+        children.add(min, child);
+    }
+
+    void removeChild(EntryNode child) { this.children.remove(child); }
 
     boolean isTerminal() {
         return isTerminal;
@@ -41,7 +67,7 @@ public class EntryNode {
             return false;
         }
 
-        return ((EntryNode) obj).letter == this.letter; //obj.letter can access private letter?
+        return ((EntryNode) obj).letter == this.letter;
     }
 
     public String toString() {
@@ -55,8 +81,8 @@ public class EntryNode {
 
     void print(String prefix, boolean isTail) {
         System.out.println(prefix + (isTail ? "└── " : "├── ") + this);
-        for (char letter : children.keySet()) {
-            children.get(letter).print(prefix + (isTail ? "    " : "│   "), false);
+        for (EntryNode child : children) {
+            child.print(prefix + (isTail ? "    " : "│   "), false);
         }
     }
 }

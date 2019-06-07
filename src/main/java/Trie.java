@@ -102,8 +102,10 @@ public class Trie {
         System.out.println("Contains 'shore': " + trie.contains("shore"));
         System.out.println("Contains 'shorebird': " + trie.contains("shorebird"));
 
+        System.out.println("\nRemove \"shorebird\", \"sea\" and \"she\":");
         trie.remove("shorebird");
         trie.remove("sea");
+        trie.remove("she");
         trie.printTrie();
     }
 }
